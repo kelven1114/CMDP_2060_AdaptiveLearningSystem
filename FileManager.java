@@ -2,6 +2,7 @@ import java.io.IOException;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.FileReader;
+import java.io.BufferedWriter;
 import java.io.BufferedReader;
 
 public class FileManager 
@@ -30,18 +31,29 @@ public class FileManager
 
 
     // Save Student method
-    public static void saveStudent ( String studentName, int age, int scores ) 
+    public static void saveStudent ( String studentName, String studentID, int age, int scores ) 
     {
         String fileName = "STU_" + studentName + ".txt";
         String filePath = STUDENT_DIR + fileName;
 
-        try ( FileWriter writer = new FileWriter ( filePath ) ) 
+        try ( BufferedWriter writer = new BufferedWriter ( new FileWriter ( filePath ) ) )
         {
-            writer.write ( fileName + "\n" );
-            writer.write ( studentName + "\n" );
-            writer.write ( age + "\n" );
-            writer.write ( scores + "\n" );
-           
+            writer.write ( fileName );
+            writer.newLine ();
+
+            writer.write ( studentID );
+            writer.newLine ();
+
+            writer.write ( studentName );
+            writer.newLine ();
+
+            // BufferedWriter writes the ASCII character, use .valueOf to turn into string
+            writer.write ( String.valueOf ( age ) );
+            writer.newLine ();
+
+            writer.write ( String.valueOf ( scores ) );
+            writer.newLine ();
+
             System.out.println ( "Student profile saved successfully." );
 
         } catch ( IOException e ) 
@@ -72,8 +84,86 @@ public class FileManager
             e.printStackTrace ();
         }
     }
-}
 
+
+    // List out all the students registered
+    public static void listStudents ()
+    {
+        File studentFolder = new File ( STUDENT_DIR );
+        File[] files = studentFolder.listFiles ();
+        int count = 1;
+
+        // If there are no files, just stop
+        if ( files == null || files.length == 0 )
+        {
+            System.out.println ( "No student files." );
+            return;
+        }
+
+        System.out.println ( "List of Students:" );
+
+        // Main loop logic
+        for ( File file : files )
+        {
+            if ( file.isFile () && file.getName ().startsWith ( "STU_" ) )
+            {
+                String fileName = file.getName ();
+
+                String studentName = fileName
+                        .replace ( "STU_", "" )
+                        .replace ( ".txt", "" );
+
+                System.out.println ( count + ". " + studentName );
+                count++;
+            }
+        }
+    }
+
+
+    // Make a student report
+    public static void exportReport ( String studentID, String studentName, int totalLessons, double averageScore, int level )
+    {
+        // Search for the student file in STUDENT_DIR first
+        String studentFileName = "STU_" + studentName + ".txt";
+        File studentFile = new File ( STUDENT_DIR + studentFileName );
+
+        if ( !studentFile.exists ( ) )
+        {
+            System.out.println ( "Student file not found: " + studentFileName );
+            return;
+        }
+
+        // Starts creating report
+        String reportFileName = studentID + "_report.txt";
+        File reportFile = new File ( REPORT_DIR + reportFileName );
+
+        try ( BufferedWriter writer = new BufferedWriter ( new FileWriter ( reportFile ) ) )
+        {
+            writer.write ( "Progress Report" );
+            writer.newLine ( );
+
+            writer.write ( "Student: " + studentName );
+            writer.newLine ( );
+
+            writer.write ( "Level: " + level );
+            writer.newLine ( );
+
+            writer.write ( "Average Score: " + averageScore );
+            writer.newLine ( );
+
+            writer.write ( "Total Lessons: " + totalLessons );
+            writer.newLine ( );
+        }
+        catch ( IOException e )
+        {
+            e.printStackTrace ( );
+            return;
+        }
+
+        System.out.println ( "Created report for: " + reportFileName );
+    }
+
+}
 
 
     /*

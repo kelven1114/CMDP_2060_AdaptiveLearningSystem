@@ -1,4 +1,4 @@
-SUBMODULE: FileManager
+METHOD: FileManager
 IMPORT: none
 EXPORT: none
 ALGORITHM:
@@ -8,7 +8,7 @@ ALGORITHM:
     END IF
     
 
-SUBMODULE: saveStudent
+METHOD: saveStudent
 IMPORT: studentId (String), studentDetails (String), progressRecords (String)
 EXPORT: none
 ALGORITHM:
@@ -27,10 +27,10 @@ ALGORITHM:
     CLOSE studentFileName
     
     OUTPUT "Saved student " + studentId + " to " + studentFileName
-END SUBMODULE
+END METHOD
 
 
-SUBMODULE: loadStudent
+METHOD: loadStudent
 IMPORT: studentId (String)
 EXPORT: studentProfile (String)  // Returns combined details as a single string
 ALGORITHM:
@@ -49,10 +49,10 @@ ALGORITHM:
     
     studentProfile := studentDetails + progressRecords
     RETURN studentProfile
-END SUBMODULE
+END METHOD
 
 
-SUBMODULE: listStudents
+METHOD: listStudents
 IMPORT: none
 EXPORT: studentList (ARRAY OF String)
 ALGORITHM:
@@ -73,10 +73,10 @@ ALGORITHM:
     END FOR
     
     RETURN studentList
-END SUBMODULE
+END METHOD
 
 
-SUBMODULE: generateProgressReport
+METHOD: generateProgressReport
 IMPORT: studentId (String), progressData (String)
 EXPORT: none
 ALGORITHM:
@@ -101,10 +101,10 @@ ALGORITHM:
     CLOSE reportFileName
     
     OUTPUT "Created report: " + reportFileName
-END SUBMODULE
+END METHOD
 
 
-SUBMODULE: loadLessons
+METHOD: loadLessons
 IMPORT: none
 EXPORT: lessonList (ARRAY OF String)
 ALGORITHM:
@@ -129,4 +129,4 @@ ALGORITHM:
     
     CLOSE lessonFileName
     RETURN lessonList
-END SUBMODULE
+END METHOD

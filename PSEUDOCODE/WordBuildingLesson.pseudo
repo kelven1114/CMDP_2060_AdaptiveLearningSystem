@@ -1,0 +1,74 @@
+CLASS WordBuildingLesson EXTENDS Lesson
+
+CLASS Field:
+    targetWord(String);
+    scrambledLetters (String array) ;
+
+CONSTRUCTOR: worldBuildingLesson
+IMPORT: lessonId(Integer), title(String), difficultyLevel(Integer), targetWord(String)
+EXPORT: none
+ASSERTION: import methods from parent class lesson
+ALGORITHM: 
+    CALL super(lessonId, title, difficultyLevel)
+    SET this.targetWord = targetWord
+    CALL scrambledLetters
+
+METHOD: evaluateAnswer
+IMPORT: userAnswer(String)
+EXPORT: none
+ASSERTION:checks if word is correct 
+ALGORITHM:
+    IF userAnswer = targetWord THEN
+        RETURN true
+    ELSE 
+        RETURN false
+    ENDIF
+
+METHOD: scrambleLetters
+IMPORT: none
+EXPORT: scrambledLetters
+ASSERTION: shuffles word letters (hints: split the letters and use Math.random() method)
+ALGORITHM:
+    shuffleTargetWord(char)[i]
+    charTargetWord(char)[i]
+    FOR i = 0 TO length(targetWord) - 1 //turns the String into characters
+        charTargetWord[i] = targetWord[i]
+    ENDFOR
+
+    n = length(shuffleTargetWord) //shuffles the characters in the array using a random number generator limited between 0 and size of the array
+    FOR originalLetter = n - 1 DOWN TO 1
+        SWAP shuffleTargetWord[i] WITH charTargetWord[RANDOM_INTEGER(0, i)]
+        scrambledLetters[i] = shuffleTargetWord[i]
+    ENDFOR   
+
+    return scrambledLetters
+
+//METHOD: displayLesson
+//IMPORT: none
+//EXPORT: none
+//ASSERTION:
+//ALGORITHM:
+    
+
+METHOD: getHint
+IMPORT: none
+EXPORT: none
+ASSERTION: reveals first letter
+ALGORITHM:
+    RETURN first character of targetWord
+
+METHOD: getScrambledLetters
+IMPORT: none
+EXPORT: none
+ASSERTION: return the scrambledLetters
+ALGORITHM:
+    RETURN scrambledLetters
+
+ACCESSOR: getTargetWord
+IMPORT: none
+EXPORT: targetWord(String array)
+ASSERTION: return the targetWord
+ALGORITHM:
+    RETURN targetWord
+
+END CLASS
