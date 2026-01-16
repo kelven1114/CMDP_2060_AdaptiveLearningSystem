@@ -12,12 +12,12 @@ public class AdaptiveLearningSystem
 
         /*
         FileManager.saveStudent ( studentName, studentID, age, scores );
-
         FileManager.loadStudent ( studentName );
-
         FileManager.listStudents();
+        FileManager.exportReport ( studentID, studentName, totalLessons, averageScore, level );
         */
 
-        FileManager.exportReport ( studentID, studentName, totalLessons, averageScore, level );
+        FileManager.loadPatternLessons();
+        
     }
 }

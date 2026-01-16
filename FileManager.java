@@ -1,9 +1,9 @@
-import java.io.IOException;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.FileReader;
-import java.io.BufferedWriter;
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 
 public class FileManager 
 {
@@ -163,38 +163,65 @@ public class FileManager
         System.out.println ( "Created report for: " + reportFileName );
     }
 
-}
 
-
-    /*
-    public static List<PatternMatchingLesson> loadPatternLessons ( String filename ) 
+    // Load pattern_lessons.txt
+    public static void loadPatternLessons ( )
     {
-        List<PatternMatchingLesson> lessons = new ArrayList<> ();
-        File file = new File ( LESSON_DIR + filename );
+        String filePath = LESSON_DIR + "pattern_lessons.txt";
 
-        try ( BufferedReader reader = new BufferedReader ( new FileReader ( file ) ) ) 
+        try ( BufferedReader reader = new BufferedReader ( new FileReader ( filePath ) ) )
         {
-            String lessonId;
+            String line;
 
-            while ( ( lessonId = reader.readLine () ) != null ) 
+            while ( ( line = reader.readLine () ) != null )
             {
-                String title = reader.readLine ();
-                int difficulty = Integer.parseInt ( reader.readLine () );
-                String[] pattern = reader.readLine ().split ( "," );
+                // Skip comments and empty lines
+                if ( line.startsWith ( "#" ) || line.trim ().isEmpty () )
+                {
+                    continue;
+                }
 
-                PatternMatchingLesson lesson =
-                        new PatternMatchingLesson ( lessonId, title, difficulty, pattern );
+                // Split lesson data using |
+                String[] parts = line.split ( "\\|" );
 
-                lessons.add ( lesson );
+                if ( parts.length != 4 )
+                {
+                    System.out.println ( "Invalid lesson format: " + line );
+                    continue;
+                }
+
+                String lessonID = parts[0];
+                String title = parts[1];
+                int difficulty = Integer.parseInt ( parts[2] );
+                String[] patterns = parts[3].split ( "," );
+
+                // Print parsed data
+                System.out.println ( "Lesson ID: " + lessonID );
+                System.out.println ( "Title: " + title );
+                System.out.println ( "Difficulty: " + difficulty );
+                System.out.print ( "Pattern: " );
+
+                for ( int i = 0; i < patterns.length; i++ )
+                {
+                    System.out.print ( patterns[i] );
+
+                    if ( i < patterns.length - 1 )
+                    {
+                        System.out.print ( ", " );
+                    }
+                }
+
+                System.out.println ( );
+                System.out.println ( "--------------------" );
             }
-        } catch ( IOException e ) 
+        }
+        catch ( IOException e )
         {
             System.out.println ( "Error loading pattern lessons." );
             e.printStackTrace ();
         }
-
-        return lessons;
     }
+
 
 
     public static void saveReport ( String studentId, String reportContent ) 
@@ -211,4 +238,4 @@ public class FileManager
         }
     }
 }
-*/
+
