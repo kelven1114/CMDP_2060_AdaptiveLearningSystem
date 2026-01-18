@@ -36,7 +36,7 @@ public class FileManager
         String fileName = "STU_" + student.getStudentId() + ".txt";
         String filePath = STUDENT_DIR + fileName;
 
-        try ( BufferedWriter writer = new BufferedWriter(new FileWriter( filePath ) ) )
+        try ( BufferedWriter writer = new BufferedWriter( new FileWriter( filePath ) ) )
         {
             writer.write( fileName );
             writer.newLine();
@@ -53,7 +53,11 @@ public class FileManager
             writer.write( String.valueOf( student.getlevel() ) );
             writer.newLine();
 
-            // Write all progress scores line by line
+            writer.write(String.valueOf(student.getPointsUsedForLevel()));
+            writer.newLine();
+
+
+            // Write progress scores
             for ( int score : student.getProgressScore() )
             {
                 writer.write( String.valueOf( score ) );
@@ -82,6 +86,7 @@ public class FileManager
             String name = reader.readLine ();
             int age = Integer.parseInt ( reader.readLine () );
             int level = Integer.parseInt ( reader.readLine () );
+            int pointsUsedForLevel = Integer.parseInt(reader.readLine());
 
             ArrayList<Integer> progressScores = new ArrayList<> ();
             String line;
@@ -91,7 +96,7 @@ public class FileManager
                 progressScores.add ( Integer.parseInt ( line ) );
             }
 
-            return new Student ( id, name, age, level, progressScores );
+            return new Student(id, name, age, level, progressScores, pointsUsedForLevel);
         }
         catch ( IOException e )
         {

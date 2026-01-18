@@ -28,6 +28,7 @@ public class PatternMatchingLesson
         {
             return "The pattern starts with: " + pattern[0];
         }
+        
         return "No pattern available.";
     }
 

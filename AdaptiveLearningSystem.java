@@ -3,7 +3,7 @@ public class AdaptiveLearningSystem
     public static void main ( String[] args ) 
     {
         // Create a student
-        Student s = new Student(700052260, "kelven", 21, 1, new java.util.ArrayList<>());
+        Student s = new Student(700052260, "kelven", 21, 1, new java.util.ArrayList<>(), 0);
 
         // Save student
         FileManager.saveStudent(s);
@@ -25,16 +25,15 @@ public class AdaptiveLearningSystem
             // Simulate answering questions
             loaded.updateProgress(true);
             loaded.updateProgress(true);  
-            loaded.updateProgress(false);
             loaded.updateProgress(true);
-            loaded.updateProgress(true);  
             loaded.updateProgress(false);
-            loaded.updateProgress(true);
-            loaded.updateProgress(true);  
             loaded.updateProgress(false);
-            loaded.updateProgress(true);
-
-
+            loaded.updateProgress(false);
+            loaded.updateProgress(false);
+            loaded.updateProgress(false);
+            loaded.updateProgress(false);
+            loaded.updateProgress(false);
+            loaded.updateProgress(false);
 
             System.out.println("After answering questions:");
             System.out.println(loaded.getStatistics());
