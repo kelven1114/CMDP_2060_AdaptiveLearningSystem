@@ -1,67 +1,51 @@
-public class PatternMatchingLesson
+public class PatternMatchingLesson extends Lesson
 {
-    private String lessonID;
-    private String title;
-    private int difficulty;
     private String[] pattern;
 
-
-    public PatternMatchingLesson ( String lessonID, String title, int difficulty, String[] patterns )
+    public PatternMatchingLesson ( String lessonId, String title, int difficultyLevel, String[] pattern )
     {
-        this.lessonID = lessonID;
-        this.title = title;
-        this.difficulty = difficulty;
-        this.pattern = patterns;
+        super ( lessonId, title, difficultyLevel );
+        this.pattern = pattern;
     }
 
 
-    public boolean evaluateAnswer ( String userAnswer )
+    // Answer checking logic
+    @Override
+    public int evaluateAnswer ( String userAnswer )
     {
         String correctPattern = String.join ( ",", pattern );
-        return userAnswer.equals ( correctPattern );
+
+        if ( userAnswer.replace ( " ", "" ).equalsIgnoreCase ( correctPattern ) )
+        {
+            markCompleted (1);
+            return 1;
+        }
+
+        return 0;
     }
 
 
+    @Override
     public String getHint ()
     {
         if ( pattern.length > 0 )
         {
             return "The pattern starts with: " + pattern[0];
         }
-        
-        return "No pattern available.";
+
+        return "";
     }
 
 
-    public void displayLesson ()
+    @Override
+    public String displayLesson ()
     {
-        System.out.println ( "Lesson ID: " + lessonID );
-        System.out.println ( "Title: " + title );
-        System.out.println ( "Difficulty: " + difficulty );
-        System.out.println ( "Pattern length: " + pattern.length );
+        return "Memorize and recreate this pattern:\n" + String.join(", ", pattern);
     }
 
 
     public String[] getPattern ()
     {
         return pattern.clone ();
-    }
-
-
-    public String getlessonID ()
-    {
-        return lessonID;
-    }
-
-
-    public String getTitle ()
-    {
-        return title;
-    }
-
-    
-    public int getdifficulty ()
-    {
-        return difficulty;
     }
 }
