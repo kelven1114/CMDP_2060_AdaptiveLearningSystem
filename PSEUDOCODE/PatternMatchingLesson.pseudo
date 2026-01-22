@@ -1,77 +1,138 @@
-CLASS: PatternMatching
+CLASS: PatternMatchingLesson EXTENDS Lesson
 PRIVATE FIELDS:
-    lessonId : String
-    title : String
-    difficultyLevel : String
     pattern : ARRAY OF String
 END CLASS
 
 
 SUBMODULE: PatternMatchingLesson (Constructor)
-IMPORT: lessonId (String), title (String), difficultyLevel (String), pattern (ARRAY OF String)
-EXPORT: lessonObject (PatternMatching)
+IMPORT: lessonId (String), title (String), difficultyLevel (Integer), pattern (ARRAY OF String)
+EXPORT: lessonObject (PatternMatchingLesson)
 ALGORITHM:
-    CREATE lessonObject AS PatternMatching
-    
-    lessonObject.lessonId := lessonId
-    lessonObject.title := title
-    lessonObject.difficultyLevel := difficultyLevel
-    lessonObject.pattern := pattern
-    
-    RETURN lessonObject
+    CALL SUPER CONSTRUCTOR(lessonId, title, difficultyLevel)
+    this.pattern := pattern
+    RETURN this
 END SUBMODULE
 
 
-SUBMODULE: evaluatePatternAnswer
-IMPORT: lesson (PatternMatching), userAnswer (String)
-EXPORT: isCorrect (Boolean)
+SUBMODULE: evaluateAnswer
+IMPORT: userAnswer (String)
+EXPORT: scorePercentage (Integer)
 ALGORITHM:
-    // Read correct answer from lesson file: 
-    lessonFileName := lesson.lessonId + "_pattern.txt"
-    // Error handling same as file manager checks
-    IF (file lessonFileName does not exist) THEN
-        OUTPUT "Pattern file not found: " + lessonFileName
-        RETURN false
+    userShapes := CALL parseUserAnswer(userAnswer, this.pattern)
+    
+    correctCount := 0
+    totalShapes := LENGTH OF this.pattern
+    
+    FOR i FROM 0 TO MINIMUM(totalShapes, LENGTH OF userShapes) - 1 DO
+        IF (userShapes[i] EQUALS IGNORE CASE this.pattern[i]) THEN
+            INCREMENT correctCount BY 1
+        END IF
+    END FOR
+    
+    IF (totalShapes > 0) THEN
+        scorePercentage := (correctCount / totalShapes) * 100
+        scorePercentage := ROUND scorePercentage TO nearest integer
+        RETURN scorePercentage
     END IF
     
-    OPEN lessonFileName FOR READING
-    READ correctPattern FROM lessonFileName
-    CLOSE lessonFileName
+    RETURN 0
+END SUBMODULE
+
+
+SUBMODULE: parseUserAnswer (PRIVATE HELPER)
+IMPORT: userAnswer (String), expectedPattern (ARRAY OF String)
+EXPORT: userShapes (ARRAY OF String)
+ALGORITHM:
+    cleanAnswer := REPLACE all commas and whitespace in userAnswer WITH empty string
+    cleanAnswer := CONVERT cleanAnswer TO lowercase
     
-    IF (userAnswer EQUALS correctPattern) THEN
-        isCorrect := true
-    ELSE
-        isCorrect := false
-    END IF
+    userShapesList := empty ArrayList
     
-    RETURN isCorrect
+    position := 0
+    WHILE (position < LENGTH OF cleanAnswer) DO
+        foundMatch := false
+        
+        FOR EACH expectedShape IN expectedPattern DO
+            lowerShape := CONVERT expectedShape TO lowercase
+            IF (cleanAnswer starts with lowerShape AT position) THEN
+                ADD expectedShape TO userShapesList
+                position := position + LENGTH OF lowerShape
+                foundMatch := true
+                BREAK FROM LOOP
+            END IF
+        END FOR
+        
+        IF (NOT foundMatch) THEN
+            remaining := SUBSTRING OF cleanAnswer FROM position TO END
+            
+            IF (remaining starts with "circle") THEN
+                ADD "Circle" TO userShapesList
+                position := position + 6
+            ELSE IF (remaining starts with "square") THEN
+                ADD "Square" TO userShapesList
+                position := position + 6
+            ELSE IF (remaining starts with "triangle") THEN
+                ADD "Triangle" TO userShapesList
+                position := position + 8
+            ELSE IF (remaining starts with "star") THEN
+                ADD "Star" TO userShapesList
+                position := position + 4
+            ELSE
+                currentChar := SUBSTRING OF cleanAnswer FROM position TO position + 1
+                currentChar := CONVERT currentChar TO uppercase
+                
+                IF (userShapesList is empty) THEN
+                    ADD currentChar TO userShapesList
+                ELSE
+                    lastShape := GET LAST ELEMENT FROM userShapesList
+                    SET LAST ELEMENT OF userShapesList TO lastShape + currentChar
+                END IF
+                
+                position := position + 1
+            END IF
+        END IF
+    END WHILE
+    
+    CONVERT userShapesList TO array
+    RETURN userShapes
 END SUBMODULE
 
 
 SUBMODULE: getHint
-IMPORT: lesson (PatternMatching)
+IMPORT: none
 EXPORT: hint (String)
 ALGORITHM:
-    // Provide a simple hint based on the first pattern element
-    hint := "The pattern starts with: " + lesson.pattern[0]
+    IF (LENGTH OF this.pattern > 0) THEN
+        hint := "The pattern starts with: " + this.pattern[0]
+    ELSE
+        hint := ""
+    END IF
+    
     RETURN hint
 END SUBMODULE
 
 
 SUBMODULE: displayLesson
-IMPORT: lesson (PatternMatching)
-EXPORT: none
+IMPORT: none
+EXPORT: lessonDisplay (String)
 ALGORITHM:
-    OUTPUT "Lesson ID: " + lesson.lessonId
-    OUTPUT "Title: " + lesson.title
-    OUTPUT "Difficulty: " + lesson.difficultyLevel
-    OUTPUT "Pattern Length: " + SIZE OF lesson.pattern
+    lessonDisplay := "Memorize and recreate this pattern:\n"
+    
+    FOR i FROM 0 TO LENGTH OF this.pattern - 1 DO
+        lessonDisplay := lessonDisplay + this.pattern[i]
+        IF (i < LENGTH OF this.pattern - 1) THEN
+            lessonDisplay := lessonDisplay + ", "
+        END IF
+    END FOR
+    
+    RETURN lessonDisplay
 END SUBMODULE
 
 
 SUBMODULE: getPattern
-IMPORT: lesson (PatternMatching)
-EXPORT: pattern (ARRAY OF String)
+IMPORT: none
+EXPORT: patternCopy (ARRAY OF String)
 ALGORITHM:
-    RETURN lesson.pattern
+    patternCopy := CREATE COPY OF this.pattern
+    RETURN patternCopy
 END SUBMODULE

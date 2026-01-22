@@ -1,6 +1,0 @@
-Progress Report
-Student Name: test
-Student ID: 700055500
-Level: 2
-Average Score: 100%
-Total Lessons Completed: 1

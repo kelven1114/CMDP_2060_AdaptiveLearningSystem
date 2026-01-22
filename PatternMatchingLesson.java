@@ -13,13 +13,11 @@ public class PatternMatchingLesson extends Lesson
     @Override
     public int evaluateAnswer( String userAnswer )
     {
-        // Clean up the user's answer
         String[] userShapes = parseUserAnswer( userAnswer, pattern );
         
         int correctCount = 0;
         int totalShapes = pattern.length;
         
-        // Compare each shape
         for( int i = 0; i < Math.min( totalShapes, userShapes.length ); i++ )
         {
             if( userShapes[i].equalsIgnoreCase( pattern[i] ) )
@@ -37,40 +35,35 @@ public class PatternMatchingLesson extends Lesson
         return 0;
     }
 
-    // Helper method to parse user answer, now with shape boundary detection
+    // Helper
     private String[] parseUserAnswer( String userAnswer, String[] expectedPattern )
     {
-        // First, clean the input
         String cleanAnswer = userAnswer.replaceAll( "[,\\s]+", "" ).toLowerCase();
         
         ArrayList<String> userShapes = new ArrayList<>();
         
-        // Try to match known shape names from the pattern
+        // Match shapes
         int position = 0;
         while( position < cleanAnswer.length() )
         {
             boolean foundMatch = false;
             
-            // Try each shape in the pattern to see if it matches at the current position
             for( String expectedShape : expectedPattern )
             {
                 String lowerShape = expectedShape.toLowerCase();
                 if( cleanAnswer.startsWith( lowerShape, position ) )
                 {
-                    userShapes.add( expectedShape ); // Store with original case
+                    userShapes.add( expectedShape );
                     position += lowerShape.length();
                     foundMatch = true;
                     break;
                 }
             }
             
-            // If no shape matched, check for common shape endings
             if( !foundMatch )
             {
-                // Try to find the next capital letter (if any mixed case)
                 String remaining = cleanAnswer.substring( position );
                 
-                // Try common shape endings
                 if( remaining.startsWith( "circle" ) )
                 {
                     userShapes.add( "Circle" );
@@ -93,15 +86,12 @@ public class PatternMatchingLesson extends Lesson
                 }
                 else
                 {
-                    // No match found, take the next character as part of current shape
                     if( userShapes.isEmpty() )
                     {
-                        // Start a new shape
                         userShapes.add( cleanAnswer.substring( position, Math.min( position + 1, cleanAnswer.length() ) ) );
                     }
                     else
                     {
-                        // Append to last shape
                         String lastShape = userShapes.get( userShapes.size() - 1 );
                         userShapes.set( userShapes.size() - 1, lastShape + cleanAnswer.charAt( position ) );
                     }

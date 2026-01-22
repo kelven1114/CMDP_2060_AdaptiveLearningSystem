@@ -8,51 +8,52 @@ METHOD: saveStudent
 IMPORT: student (Student)
 EXPORT: none
 ALGORITHM:
-    studentFileName := "STU_" + student.name + ".txt"
+    fileName := "STU_" + student.getStudentId() + ".txt"
+    filePath := STUDENT_DIR + fileName
 
-    IF (studentFileName exists) THEN
-        OUTPUT "Student already exists"
-        RETURN
-    END IF
+    OPEN filePath FOR WRITING
+    WRITE fileName TO file
+    WRITE student.getStudentId() TO file
+    WRITE student.getName() TO file
+    WRITE student.getAge() TO file
+    WRITE student.getCurrentLevel() TO file
 
-    OPEN studentFileName FOR WRITING
-    WRITE studentFileName TO file
-    WRITE student.name TO file
-    WRITE student.age TO file
-
-    FOR EACH score IN student.progressHistory DO
+    FOR EACH score IN student.getProgressScores() DO
         WRITE score TO file
     END FOR
 
     CLOSE file
-    OUTPUT "Student saved successfully"
+    OUTPUT "Student profile saved successfully."
 END METHOD
 
 
 METHOD: loadStudent
-IMPORT: studentID (String)
+IMPORT: studentId (String)
 EXPORT: student (Student)
 ALGORITHM:
-    studentFileName := "STU_" + studentID + ".txt"
+    filePath := STUDENT_DIR + "STU_" + studentId + ".txt"
 
     IF (file does not exist) THEN
-        OUTPUT "Student file not found"
+        OUTPUT "Failed to load student: " + studentId
         RETURN null
     END IF
 
-    OPEN file FOR READING
-    READ name
-    READ age
+    OPEN filePath FOR READING
+    SKIP first line (fileName)
+    READ id (Integer)
+    READ name (String)
+    READ age (Integer)
+    READ level (Integer)
 
-    progressHistory := empty ArrayList
+    progressScores := empty ArrayList
 
     WHILE (NOT end of file) DO
-        READ score
-        ADD score TO progressHistory
+        READ score (Integer)
+        ADD score TO progressScores
     END WHILE
 
     CLOSE file
-    CREATE student USING name, age, progressHistory
+    CREATE student USING id, name, age, level, progressScores
     RETURN student
 END METHOD
 
@@ -61,77 +62,150 @@ METHOD: listStudents
 IMPORT: none
 EXPORT: studentList (ARRAY OF String)
 ALGORITHM:
-    allFiles := LIST FILES IN STUDENT_DIR
-    studentList := empty list
+    folder := GET DIRECTORY STUDENT_DIR
+    files := LIST ALL FILES IN folder
 
-    FOR EACH file IN allFiles DO
-        IF (file name starts with "STU_") THEN
-            studentName := file name without prefix and suffix
-            ADD studentName TO studentList
+    IF (files is null OR empty) THEN
+        RETURN empty array
+    END IF
+
+    students := empty list
+
+    FOR EACH file IN files DO
+        IF (file is regular file AND file name starts with "STU_") THEN
+            studentId := file name
+            studentId := REMOVE "STU_" FROM studentId
+            studentId := REMOVE ".txt" FROM studentId
+            ADD studentId TO students
         END IF
     END FOR
 
+    CONVERT students list TO array
     RETURN studentList
 END METHOD
 
 
 METHOD: exportReport
-IMPORT: student (Student), report (String)
+IMPORT: student (Student)
 EXPORT: none
 ALGORITHM:
-    reportFileName := student.id + "_report.txt"
+    studentId := student.getStudentId() AS String
+    studentName := student.getName()
 
-    OPEN reportFileName FOR WRITING
-    WRITE report TO file
+    studentFile := STUDENT_DIR + "STU_" + studentId + ".txt"
+    
+    IF (studentFile does not exist) THEN
+        OUTPUT "Student file not found."
+        RETURN
+    END IF
+
+    reportFilePath := REPORT_DIR + studentId + "_report.txt"
+
+    OPEN reportFilePath FOR WRITING
+    WRITE "Progress Report" TO file
+    WRITE "Student Name: " + studentName TO file
+    WRITE "Student ID: " + studentId TO file
+    WRITE "Level: " + student.getCurrentLevel() TO file
+
+    avg := student.getAverageScore()
+    avgPercent := ROUND avg TO nearest integer
+    WRITE "Average Score: " + avgPercent + "%" TO file
+
+    totalLessons := SIZE OF student.getProgressScores()
+    WRITE "Total Lessons Completed: " + totalLessons TO file
+
     CLOSE file
-
-    OUTPUT "Report created"
+    OUTPUT "Report created for student ID: " + studentId
 END METHOD
 
 
 METHOD: loadPatternLessons
-IMPORT: filename (String)
-EXPORT: lessonList (ArrayList of PatternMatchingLesson)
+IMPORT: none
+EXPORT: lessons (List of PatternMatchingLesson)
 ALGORITHM:
-    OPEN filename FOR READING
-    lessonList := empty ArrayList
+    filePath := LESSON_DIR + "pattern_lessons.txt"
+    lessons := empty ArrayList
 
-    WHILE (NOT end of file) DO
-        READ line
-        IF (line empty OR starts with "#") THEN
-            CONTINUE
-        END IF
+    TRY
+        OPEN filePath FOR READING
+        
+        WHILE (NOT end of file) DO
+            READ line
+            
+            IF (line trimmed is empty OR line starts with "#") THEN
+                CONTINUE
+            END IF
 
-        SPLIT line BY "|"
-        VALIDATE data
-        CREATE PatternMatchingLesson
-        ADD lesson TO lessonList
-    END WHILE
+            SPLIT line BY "|" character
+            parts := RESULT OF SPLIT
+            
+            IF (SIZE OF parts != 4) THEN
+                CONTINUE
+            END IF
 
-    CLOSE file
-    RETURN lessonList
+            lessonId := parts[0]
+            title := parts[1]
+            difficulty := CONVERT parts[2] TO Integer
+            patterns := SPLIT parts[3] BY ","
+
+            IF (NOT lessonId starts with "PM" OR difficulty < 1 OR difficulty > 3) THEN
+                CONTINUE
+            END IF
+
+            CREATE patternMatchingLesson USING lessonId, title, difficulty, patterns
+            ADD patternMatchingLesson TO lessons
+        END WHILE
+
+        CLOSE file
+    CATCH IOException
+        OUTPUT "Pattern lessons file does not exist."
+    END TRY
+
+    RETURN lessons
 END METHOD
 
 
 METHOD: loadWordLessons
-IMPORT: filename (String)
-EXPORT: lessonList (ArrayList of WordBuildingLesson)
+IMPORT: none
+EXPORT: lessons (List of WordBuildingLesson)
 ALGORITHM:
-    OPEN filename FOR READING
-    lessonList := empty ArrayList
+    filePath := LESSON_DIR + "word_lessons.txt"
+    lessons := empty ArrayList
 
-    WHILE (NOT end of file) DO
-        READ line
-        IF (line empty OR starts with "#") THEN
-            CONTINUE
-        END IF
+    TRY
+        OPEN filePath FOR READING
+        
+        WHILE (NOT end of file) DO
+            READ line
+            
+            IF (line trimmed is empty OR line starts with "#") THEN
+                CONTINUE
+            END IF
 
-        SPLIT line BY "|"
-        VALIDATE data
-        CREATE WordBuildingLesson
-        ADD lesson TO lessonList
-    END WHILE
+            SPLIT line BY "|" character
+            parts := RESULT OF SPLIT
+            
+            IF (SIZE OF parts != 4) THEN
+                CONTINUE
+            END IF
 
-    CLOSE file
-    RETURN lessonList
+            lessonId := parts[0]
+            title := parts[1]
+            difficulty := CONVERT parts[2] TO Integer
+            targetWord := parts[3]
+
+            IF (NOT lessonId starts with "WB" OR difficulty < 1 OR difficulty > 3) THEN
+                CONTINUE
+            END IF
+
+            CREATE wordBuildingLesson USING lessonId, title, difficulty, targetWord
+            ADD wordBuildingLesson TO lessons
+        END WHILE
+
+        CLOSE file
+    CATCH IOException
+        OUTPUT "Word building lessons file does not exist."
+    END TRY
+
+    RETURN lessons
 END METHOD

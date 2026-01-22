@@ -220,11 +220,50 @@ public class FileManager
         return lessons;
     }
 
-    /*
-    public static ArrayList<WordBuildingLesson> loadWordLessons()
+
+    public static List<WordBuildingLesson> loadWordLessons()
     {
-        ArrayList<WordBuildingLesson> lessons = new ArrayList<>();
+        List<WordBuildingLesson> lessons = new ArrayList<>();
+        String filePath = LESSON_DIR + "word_lessons.txt";
+
+        try ( BufferedReader reader = new BufferedReader( new FileReader( filePath ) ) )
+        {
+            String line;
+
+            while( ( line = reader.readLine() ) != null )
+            {
+                if( line.trim().isEmpty() || line.startsWith( "#" ) )
+                {
+                    continue;
+                }
+
+                String[] parts = line.split( "\\|" );
+
+                if( parts.length != 4 )
+                {
+                    continue;
+                }
+
+                String lessonId = parts[0];
+                String title = parts[1];
+                int difficulty = Integer.parseInt( parts[2] );
+                String targetWord = parts[3];
+
+                if( !lessonId.startsWith( "WB" ) || difficulty < 1 || difficulty > 3 )
+                {
+                    continue;
+                }
+
+                lessons.add(
+                        new WordBuildingLesson( lessonId, title, difficulty, targetWord )
+                );
+            }
+        }
+        catch( IOException e )
+        {
+            System.out.println( "Word building lessons file does not exist." );
+        }
+
         return lessons;
     }
-    */
 }

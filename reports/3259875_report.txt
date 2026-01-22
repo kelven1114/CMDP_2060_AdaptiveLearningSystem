@@ -1,0 +1,6 @@
+Progress Report
+Student Name: test
+Student ID: 3259875
+Level: 1
+Average Score: 54%
+Total Lessons Completed: 4
