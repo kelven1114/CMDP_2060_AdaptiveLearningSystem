@@ -1,114 +1,117 @@
 import java.util.*;
 
-public class Student {
-    // CLASS FIELDS
-
+public class Student
+{
     private int studentId;
     private String name;
     private int age;
-    private int level;
+    private int currentLevel;
     private ArrayList<Integer> progressScores;
-    private int pointsUsedForLevel = 0;
 
-    // PARAMETER CONSTRUCTOR
-
-    public Student ( int studentId, String name, int age, int level, ArrayList<Integer> progressScores, int pointsUsedForLevel ) {
+    public Student( int studentId, String name, int age, int currentLevel, ArrayList<Integer> progressScores )
+    {
         this.studentId = studentId;
         this.name = name;
         this.age = age;
-        this.level = level;
+        this.currentLevel = currentLevel;
         this.progressScores = progressScores;
-        this.pointsUsedForLevel = pointsUsedForLevel;
     }
 
-    public int getStudentId ( ) {
+    public int getStudentId()
+    {
         return studentId;
     }
 
-    public String getName ( ) {
+    public String getName()
+    {
         return name;
     }
 
-    public int getAge ( ) {
+    public int getAge()
+    {
         return age;
     }
 
-    public int getPointsUsedForLevel ( ) {
-        return pointsUsedForLevel;
+    public int getCurrentLevel()
+    {
+        return currentLevel;
     }
 
-    public void setPointsUsedForLevel ( int pointsUsedForLevel ) {
-        this.pointsUsedForLevel = pointsUsedForLevel;
-    }
-
-    // METHOD: updateProgress, +1 for correct, -1 for incorrect
-    public void updateProgress ( boolean isCorrect ) {
-        if ( isCorrect ) {
-            progressScores.add ( 1 );
-        } else {
-            progressScores.add ( -1 );
-        }
-
-        checkLevelUp ( );
-    }
-
-    // Check if student can level up
-    public void checkLevelUp ( ) {
-        int totalPoints = 0;
-
-        for ( int score : progressScores ) {
-            totalPoints += score;
-        }
-
-        int newLevels = ( totalPoints - pointsUsedForLevel ) / 3;
-
-        if ( newLevels > 0 ) {
-            level += newLevels;
-            pointsUsedForLevel += newLevels * 3;
+    public void setCurrentLevel( int level )
+    {
+        if( level >= 1 && level <= 3 )
+        {
+            this.currentLevel = level;
         }
     }
 
-    // METHOD: getStatistics
-    public String getStatistics ( ) {
-        double avgScore = getAverageScore ( );
-        int totalLessons = progressScores.size ( );
-
-        String statisticsReport = 
-            "Student: " + name  + "\n" + 
-            "Level: " + level + "\n" + 
-            "Average Score: " + Math.round ( avgScore ) + "%" + "\n" + 
-            "Total Lessons: " + totalLessons;
-
-        return statisticsReport;
+    public void updateProgress( int score )
+    {
+        progressScores.add( score );
+        checkAndUpdateLevel();
     }
 
-    // METHOD: getlevel
-    public int getlevel ( ) {
-        return level;
+    public void checkAndUpdateLevel()
+    {
+        double averageScore = getAverageScore();
+        
+        if( currentLevel == 1 && averageScore >= 60.0 )
+        {
+            currentLevel = 2;
+        }
+        else if( currentLevel == 2 && averageScore >= 70.0 )
+        {
+            currentLevel = 3;
+        }
     }
 
-    // METHOD: getProgressScore
-    public ArrayList<Integer> getProgressScore ( ) {
+    public String getStatistics()
+    {
+        double avgScore = getAverageScore();
+        int totalLessons = progressScores.size();
+        int correctAnswers = 0;
+        
+        for( int score : progressScores )
+        {
+            if( score == 100 )
+            {
+                correctAnswers++;
+            }
+        }
+        
+        return String.format(
+            "Student: %s\n" +
+            "Age: %d\n" +
+            "Current Level: %d\n" +
+            "Total Lessons Completed: %d\n" +
+            "Perfect Scores: %d\n" +
+            "Average Score: %.0f%%\n" +
+            "Progress Scores: %s",
+            name, age, currentLevel, totalLessons, correctAnswers, 
+            avgScore, progressScores.toString()
+        );
+    }
+
+    public ArrayList<Integer> getProgressScores()
+    {
         return progressScores;
     }
 
-    // METHOD: getAverageScore
-    public double getAverageScore ( ) {
-        if ( progressScores.isEmpty ( ) ) {
+    public double getAverageScore()
+    {
+        if( progressScores.isEmpty() )
+        {
             return 0.0;
         }
 
         int total = 0;
-        int countCorrect = 0;
-
-        for ( int score : progressScores ) {
-            if ( score == 1 ) {
-                countCorrect++;
-            }
-            total += Math.abs ( score ); // total answered questions count
+        for( int score : progressScores )
+        {
+            total += score;
         }
 
-        // average = (correct answers / total answered) * 100
-        return ( ( double ) countCorrect / total ) * 100;
+        double average = ( double ) total / progressScores.size();
+        
+        return Math.ceil( average );
     }
 }
