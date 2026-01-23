@@ -95,6 +95,7 @@ public class FileManager
         }
     }
 
+
     public static String[] listStudents()
     {
         File folder = new File( STUDENT_DIR );
@@ -126,7 +127,8 @@ public class FileManager
         return students.toArray( new String[0] );
     }
 
-    public static void exportReport( Student student )
+    
+        public static void exportReport( Student student )
     {
         String studentId = String.valueOf( student.getStudentId() );
         String studentName = student.getName();
@@ -152,6 +154,9 @@ public class FileManager
             writer.write( "Student ID: " + studentId );
             writer.newLine();
 
+            writer.write( "Age: " + student.getAge() );
+            writer.newLine();
+
             writer.write( "Level: " + student.getCurrentLevel() );
             writer.newLine();
 
@@ -165,6 +170,18 @@ public class FileManager
 
             writer.write( "Total Lessons Completed: " + totalLessons );
             writer.newLine();
+
+            int perfectScores = 0;
+            for( int score : student.getProgressScores() )
+            {
+                if( score == 100 )
+                {
+                    perfectScores++;
+                }
+            }
+
+            writer.write( "Perfect Scores: " + perfectScores );
+            writer.newLine();
         }
         catch( IOException e )
         {
@@ -173,6 +190,7 @@ public class FileManager
 
         System.out.println( "Report created for student ID: " + studentId );
     }
+
 
     public static List<PatternMatchingLesson> loadPatternLessons()
     {

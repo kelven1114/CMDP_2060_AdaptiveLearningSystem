@@ -5,24 +5,90 @@ CLASS Fields:
    studentId(Integer);
    name(String);
    age(Integer);
-   currentLevel(Integer);
+   currentlevel(Integer);
    progressScores (ArrayList);
+    
    
-   
 
-    METHOD:updateProgress()
-    IMPORT: Score (int)
-    EXPORT: none
-    ASSSERTION: Update the score of the current user.
-    ALGORITHM:
-        
-        IF (Score >= 0) AND (Score <= 60) THEN
+METHOD:getStudentid()
+IMPORT:NONE
+EXPORT:studentId(Integer)
+ASSSERTION:Return  current studentId
 
-        this.progressScores = + Score
+ALGORITHM:
 
-        ELSE 
-        DISPLAY "Invalid Score."
-    END METHOD 
+  return studentId
+
+
+METHOD:getName()
+IMPORT:NONE
+EXPORT:name(String)
+ASSSERTION:Return current  name
+
+ALGORITHM:
+
+  return name
+
+
+METHOD:getAge()
+IMPORT:NONE
+EXPORT:age(int)
+ASSSERTION:Return current age
+
+ALGORITHM:
+
+  return age
+
+
+ METHOD:getCurrentLevel 
+ IMPORT:none
+ EXPORT: currentLevel(Integer)
+ ASSERTION: Return current value of current level
+ ALGORITHM:
+
+     Return currentLevel(Integer);
+    
+
+
+
+METHOD: setCurrentLevel
+IMPORT: level (Integer)
+EXPORT: NONE
+ASSERTION: Set the student's current level within the valid range.
+
+ALGORITHM:
+
+    IF level >= 1 AND level <= 3 THEN
+        currentLevel = level
+    ENDIF
+
+
+METHOD: updateProgress()
+IMPORT: score (Integer)
+EXPORT: NONE
+ASSERTION: Record the lesson score and update the student's level if required.
+
+ALGORITHM:
+
+    ADD score to progressScores
+    CALL checkAndUpdateLevel()
+
+
+METHOD: checkAndUpdateLevel()
+IMPORT: NONE
+EXPORT: NONE
+ASSERTION: Update student level based on average score thresholds.
+
+ALGORITHM:
+
+    CALL getAverageScore() and store result in averageScore
+
+    IF currentLevel = 1 AND averageScore >= 60 THEN
+        currentLevel = 2
+    ELSE IF currentLevel = 2 AND averageScore >= 70 THEN
+        currentLevel = 3
+    ENDIF
+
 
 
 
@@ -35,7 +101,14 @@ CLASS Fields:
         
      
     CALL getAverageScore() and store result in avgScore
+    SET totalLessons = size of progressScores
+    SET  correctanswer=0
 
+        FOR each score in progressScores DO
+        IF score = 100 THEN
+            correctAnswers =correctAnswers + 1
+        ENDIF
+     
 
         CREATE FORMATTED String with:
         "Student:":+name;
@@ -44,63 +117,42 @@ CLASS Fields:
         "Total lessons": + size of progress scores 
        
         RETURN statisticsreport(String)
-     
-
-
-        END METHOD 
 
 
 
-        METHOD:setCurrentLevel
-        IMPORT: Score(Integer)
-        EXPORT: NONE
-        ASSERTION: Set the current level of the user when they complete their answer that is correct
-         ALGORITHM:
-         
-          IF score >= 30 THEN
-        currentLevel = currentLevel + 1
-      END METHOD 
-      
-
-     METHOD:getCurrentLevel 
-     IMPORT:none
-     EXPORT: currentLevel(Integer)
-     ASSERTION: Return current value of current level
-
-     ALGORITHM:
-     Return currentLevel(Integer);
-    END METHOD 
+    
 
 
-
-
-     METHOD:getProgressScore
+     METHOD:getProgressScore()
      IMPORT:none
      EXPORT: progressScores (ArrayList)
      ASSSERTION:Return  all stored progress scores of the student
      ALGORITHM:
 
      Return progressScores (ArrayList)
-     END METHOD 
+     
 
+METHOD: getAverageScore
+IMPORT: NONE
+EXPORT: averageScore (Double)
+ASSERTION: Calculate and return the average score rounded up.
 
-METHOD:getAverageScore()
-IMPORT:NONE
-EXPORT:averagescore(double)
-ASSERTION: calculate and return the average progress score
+ALGORITHM:
 
-IF progressScores is empty THEN
- RETURN 0
-  
- END IF
+    IF progressScores is empty THEN
+        RETURN 0.0
+    ENDIF
 
-    total = 0  // local varaible that just only sum all the score 
-    FOR EACH score IN progressScores DO //score represents the result of one question or lesson.
+    SET total = 0
 
-     total =total + score
-      END FOR 
+    FOR each score in progressScores DO
+        total =total + score
+    ENDFOR
 
-      averageScore = total / size of progressScores //averagescore  represents the overall performance of the student
-       RETURN averageScore
+    SET average = total / size of progressScores
+    SET averageScore = round average up to nearest integer
 
+    RETURN averageScore
+
+    
 END CLASS

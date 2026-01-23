@@ -1,74 +1,96 @@
 CLASS WordBuildingLesson EXTENDS Lesson
 
-CLASS Field:
-    targetWord(String);
-    scrambledLetters (String array) ;
+CLASS FIELDS:
+    targetWord (String)
+    scrambledLetters (String[])
 
-CONSTRUCTOR: worldBuildingLesson
-IMPORT: lessonId(Integer), title(String), difficultyLevel(Integer), targetWord(String)
-EXPORT: none
-ASSERTION: import methods from parent class lesson
-ALGORITHM: 
+CONSTRUCTOR:
+    WordBuildingLesson(
+        lessonId (Integer),
+        title (String),
+        difficultyLevel (Integer),
+        targetWord (String)
+    )
+
+ALGORITHM:
     CALL super(lessonId, title, difficultyLevel)
     SET this.targetWord = targetWord
-    CALL scrambledLetters
+    CALL scrambleLetters()
+END CONSTRUCTOR
+
 
 METHOD: evaluateAnswer
-IMPORT: userAnswer(String)
-EXPORT: none
-ASSERTION:checks if word is correct 
+IMPORT: userAnswer (String)
+EXPORT: score (Integer)
+ASSERTION: Compare user answer with target word and return score.
+
 ALGORITHM:
-    IF userAnswer = targetWord THEN
-        RETURN true
-    ELSE 
-        RETURN false
+    IF userAnswer equals targetWord (ignore case) THEN
+        RETURN 100
+    ELSE
+        RETURN 0
     ENDIF
+END METHOD
+
 
 METHOD: scrambleLetters
 IMPORT: none
-EXPORT: scrambledLetters
-ASSERTION: shuffles word letters (hints: split the letters and use Math.random() method)
+EXPORT: none
+ASSERTION: Shuffle the letters of the target word randomly.
+
 ALGORITHM:
-    shuffleTargetWord(char)[i]
-    charTargetWord(char)[i]
-    FOR i = 0 TO length(targetWord) - 1 //turns the String into characters
-        charTargetWord[i] = targetWord[i]
-    ENDFOR
+    CONVERT targetWord TO charArray
+    FOR i FROM length(charArray) - 1 DOWNTO 1 DO
+        SET j = random number between 0 and i
+        SWAP charArray[i] WITH charArray[j]
+    END FOR
 
-    n = length(shuffleTargetWord) //shuffles the characters in the array using a random number generator limited between 0 and size of the array
-    FOR originalLetter = n - 1 DOWN TO 1
-        SWAP shuffleTargetWord[i] WITH charTargetWord[RANDOM_INTEGER(0, i)]
-        scrambledLetters[i] = shuffleTargetWord[i]
-    ENDFOR   
+    CREATE scrambledLetters array of size length(charArray)
+    FOR each index i IN charArray DO
+        SET scrambledLetters[i] = charArray[i] as String
+    END FOR
+END METHOD
 
-    return scrambledLetters
+METHOD: displayLesson
+IMPORT: none
+EXPORT: displayText (String)
+ASSERTION: Display the scrambled letters to the user.
 
-//METHOD: displayLesson
-//IMPORT: none
-//EXPORT: none
-//ASSERTION:
-//ALGORITHM:
-    
+ALGORITHM:
+    SET displayText = "Rearrange the letters:\n"
+    FOR each letter IN scrambledLetters DO
+        APPEND letter and space TO displayText
+    END FOR
+
+    RETURN trimmed displayText
+END METHOD
 
 METHOD: getHint
 IMPORT: none
-EXPORT: none
-ASSERTION: reveals first letter
+EXPORT: hint (String)
+ASSERTION: Provide a hint for the lesson.
+
 ALGORITHM:
-    RETURN first character of targetWord
+    RETURN "The first letter is: " + first character of targetWord
+END METHOD
+
 
 METHOD: getScrambledLetters
 IMPORT: none
-EXPORT: none
-ASSERTION: return the scrambledLetters
+EXPORT: scrambledLetters (String[])
+ASSERTION: Return the scrambled letters.
+
 ALGORITHM:
     RETURN scrambledLetters
+END METHOD
 
-ACCESSOR: getTargetWord
+METHOD: getTargetWord
 IMPORT: none
-EXPORT: targetWord(String array)
-ASSERTION: return the targetWord
+EXPORT: targetWord (String)
+ASSERTION: Return the target word.
+
 ALGORITHM:
     RETURN targetWord
+END METHOD
 
 END CLASS

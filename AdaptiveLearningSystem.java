@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Random;
 import java.util.ArrayList;
 
-
 public class AdaptiveLearningSystem
 {
     private static JFrame mainFrame;
@@ -13,14 +12,21 @@ public class AdaptiveLearningSystem
     private static List<WordBuildingLesson> wordBuildingLessons;
     private static WordBuildingLesson currentWordLesson;
     private static Student currentStudent;
+    
+    private static JTextField idField;
+    private static JTextField nameField;
+    private static JTextField ageField;
+    private static JLabel errorLabel;
 
 
+    // Launch application
     public static void main( String[] args )
     {
         showStudentRegistration();
     }
 
 
+    // Display registration
     private static void showStudentRegistration()
     {
         mainFrame = createFrame( "Adaptive Learning System - Welcome", 500, 400 );
@@ -40,6 +46,7 @@ public class AdaptiveLearningSystem
     }
 
 
+    // Create frame
     private static JFrame createFrame( String title, int width, int height )
     {
         JFrame frame = new JFrame( title );
@@ -50,6 +57,7 @@ public class AdaptiveLearningSystem
     }
 
 
+    // Create panel
     private static JPanel createMainPanel()
     {
         JPanel panel = new JPanel( new BorderLayout() );
@@ -59,6 +67,7 @@ public class AdaptiveLearningSystem
     }
 
 
+    // Create title
     private static JPanel createTitlePanel( String line1, String line2 )
     {
         JPanel titlePanel = new JPanel();
@@ -77,6 +86,7 @@ public class AdaptiveLearningSystem
     }
 
 
+    // Create line
     private static JPanel createTitleLine( String text )
     {
         JPanel panel = new JPanel( new BorderLayout() );
@@ -93,6 +103,7 @@ public class AdaptiveLearningSystem
     }
 
 
+    // Create center
     private static JPanel createRegistrationCenterPanel()
     {
         JPanel panel = new JPanel( new GridLayout( 1, 2, 30, 0 ) );
@@ -118,6 +129,7 @@ public class AdaptiveLearningSystem
     }
 
 
+    // Create button
     private static JButton createStyledButton( String text, Color color, int fontSize )
     {
         JButton button = new JButton( text );
@@ -143,6 +155,7 @@ public class AdaptiveLearningSystem
     }
 
 
+    // Create panel
     private static JPanel createRegistrationBottomPanel()
     {
         JPanel panel = new JPanel( new FlowLayout( FlowLayout.CENTER ) );
@@ -158,6 +171,7 @@ public class AdaptiveLearningSystem
     }
 
 
+    // Confirm exit
     private static void showExitConfirmation()
     {
         int option = JOptionPane.showConfirmDialog(
@@ -167,13 +181,14 @@ public class AdaptiveLearningSystem
             JOptionPane.YES_NO_OPTION
         );
 
-        if( option == JOptionPane.YES_OPTION )
+        if ( option == JOptionPane.YES_OPTION )
         {
             System.exit( 0 );
         }
     }
 
 
+    // Show form
     private static void showNewStudentForm()
     {
         JDialog dialog = createDialog( mainFrame, "Create New Student", 500, 400 );
@@ -192,6 +207,7 @@ public class AdaptiveLearningSystem
     }
 
 
+    // Create dialog
     private static JDialog createDialog( JFrame parent, String title, int width, int height )
     {
         JDialog dialog = new JDialog( parent, title, true );
@@ -202,6 +218,7 @@ public class AdaptiveLearningSystem
     }
 
 
+    // Create title
     private static JPanel createDialogTitle( String title )
     {
         JPanel panel = new JPanel( new BorderLayout() );
@@ -217,8 +234,20 @@ public class AdaptiveLearningSystem
     }
 
 
+    // Create panel
     private static JPanel createStudentFormPanel( JDialog dialog )
     {
+        idField = new JTextField( 20 );
+        nameField = new JTextField( 20 );
+        ageField = new JTextField( 20 );
+        errorLabel = new JLabel( "", SwingConstants.CENTER );
+        
+        idField.setFont( new Font( "Arial", Font.PLAIN, 14 ) );
+        nameField.setFont( new Font( "Arial", Font.PLAIN, 14 ) );
+        ageField.setFont( new Font( "Arial", Font.PLAIN, 14 ) );
+        errorLabel.setFont( new Font( "Arial", Font.PLAIN, 12 ) );
+        errorLabel.setForeground( Color.RED );
+
         JPanel panel = new JPanel( new GridBagLayout() );
         panel.setBackground( Color.WHITE );
         panel.setBorder( BorderFactory.createEmptyBorder( 20, 20, 20, 20 ) );
@@ -226,13 +255,6 @@ public class AdaptiveLearningSystem
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets( 10, 10, 10, 10 );
         gbc.fill = GridBagConstraints.HORIZONTAL;
-
-        JTextField idField = new JTextField( 20 );
-        JTextField nameField = new JTextField( 20 );
-        JTextField ageField = new JTextField( 20 );
-        JLabel errorLabel = new JLabel( "", SwingConstants.CENTER );
-        errorLabel.setFont( new Font( "Arial", Font.PLAIN, 12 ) );
-        errorLabel.setForeground( Color.RED );
 
         addFormField( panel, gbc, "Student ID:", idField, 0 );
         addFormField( panel, gbc, "Name:", nameField, 1 );
@@ -248,6 +270,7 @@ public class AdaptiveLearningSystem
     }
 
 
+    // Add field
     private static void addFormField( JPanel panel, GridBagConstraints gbc, String labelText, JTextField field, int row )
     {
         gbc.gridx = 0;
@@ -270,6 +293,7 @@ public class AdaptiveLearningSystem
     }
 
 
+    // Create buttons
     private static JPanel createStudentFormButtons( JDialog dialog )
     {
         JPanel panel = new JPanel( new FlowLayout( FlowLayout.CENTER, 20, 0 ) );
@@ -292,49 +316,14 @@ public class AdaptiveLearningSystem
     }
 
 
+    // Save student
     private static void saveNewStudent( JDialog dialog )
     {
-        Component[] components = ((JPanel)((JPanel)dialog.getContentPane().getComponent(0)).getComponent(1)).getComponents();
-        
-        JTextField idField = null;
-        JTextField nameField = null;
-        JTextField ageField = null;
-        JLabel errorLabel = null;
-        
-        for( Component comp : components )
-        {
-            if( comp instanceof JPanel )
-            {
-                Component[] subComps = ((JPanel)comp).getComponents();
-                for( Component subComp : subComps )
-                {
-                    if( subComp instanceof JTextField )
-                    {
-                        JTextField field = (JTextField)subComp;
-                        String labelText = ((JLabel)((JPanel)comp).getComponent(0)).getText();
-                        
-                        if( labelText.equals( "Student ID:" ) ) idField = field;
-                        else if( labelText.equals( "Name:" ) ) nameField = field;
-                        else if( labelText.equals( "Age:" ) ) ageField = field;
-                    }
-                    else if( subComp instanceof JLabel && ((JLabel)subComp).getForeground().equals( Color.RED ) )
-                    {
-                        errorLabel = (JLabel)subComp;
-                    }
-                }
-            }
-        }
-        
-        if( idField == null || nameField == null || ageField == null )
-        {
-            return;
-        }
-        
         String idText = idField.getText().trim();
         String name = nameField.getText().trim();
         String ageText = ageField.getText().trim();
         
-        if( validateStudentForm( idText, name, ageText, errorLabel ) )
+        if ( validateStudentForm( idText, name, ageText, errorLabel ) )
         {
             try
             {
@@ -342,7 +331,7 @@ public class AdaptiveLearningSystem
                 int age = Integer.parseInt( ageText );
                 
                 Student existingStudent = FileManager.loadStudent( idText );
-                if( existingStudent != null )
+                if ( existingStudent != null )
                 {
                     handleExistingStudent( dialog, existingStudent, errorLabel );
                     return;
@@ -356,34 +345,35 @@ public class AdaptiveLearningSystem
                 mainFrame.dispose();
                 createMainDashboard();
             }
-            catch( NumberFormatException exception )
+            catch ( NumberFormatException exception )
             {
-                if( errorLabel != null ) errorLabel.setText( "Student ID and Age must be numbers." );
+                if ( errorLabel != null ) errorLabel.setText( "Student ID and Age must be numbers." );
             }
         }
     }
 
 
+    // Validate form
     private static boolean validateStudentForm( String id, String name, String age, JLabel errorLabel )
     {
-        if( id.isEmpty() || name.isEmpty() || age.isEmpty() )
+        if ( id.isEmpty() || name.isEmpty() || age.isEmpty() )
         {
-            if( errorLabel != null ) errorLabel.setText( "Please fill in all fields." );
+            if ( errorLabel != null ) errorLabel.setText( "Please fill in all fields." );
             return false;
         }
         
         try
         {
             int ageValue = Integer.parseInt( age );
-            if( ageValue <= 0 || ageValue > 120 )
+            if ( ageValue <= 0 || ageValue > 120 )
             {
-                if( errorLabel != null ) errorLabel.setText( "Please enter a valid age (1-120)." );
+                if ( errorLabel != null ) errorLabel.setText( "Please enter a valid age (1-120)." );
                 return false;
             }
         }
-        catch( NumberFormatException e )
+        catch ( NumberFormatException e )
         {
-            if( errorLabel != null ) errorLabel.setText( "Age must be a number." );
+            if ( errorLabel != null ) errorLabel.setText( "Age must be a number." );
             return false;
         }
         
@@ -391,6 +381,7 @@ public class AdaptiveLearningSystem
     }
 
 
+    // Handle existing
     private static void handleExistingStudent( JDialog dialog, Student existingStudent, JLabel errorLabel )
     {
         int option = JOptionPane.showConfirmDialog(
@@ -400,7 +391,7 @@ public class AdaptiveLearningSystem
             JOptionPane.YES_NO_OPTION
         );
 
-        if( option == JOptionPane.YES_OPTION )
+        if ( option == JOptionPane.YES_OPTION )
         {
             currentStudent = existingStudent;
             dialog.dispose();
@@ -409,11 +400,12 @@ public class AdaptiveLearningSystem
         }
         else
         {
-            if( errorLabel != null ) errorLabel.setText( "Please use a different Student ID." );
+            if ( errorLabel != null ) errorLabel.setText( "Please use a different Student ID." );
         }
     }
 
 
+    // Show success
     private static void showSuccessMessage( JDialog dialog, String name, int id )
     {
         JOptionPane.showMessageDialog(
@@ -425,6 +417,7 @@ public class AdaptiveLearningSystem
     }
 
 
+    // Load student
     private static void showLoadStudentWindow()
     {
         JFrame loadFrame = createFrame( "Load Existing Student", 500, 400 );
@@ -444,6 +437,7 @@ public class AdaptiveLearningSystem
     }
 
 
+    // Create list
     private static JPanel createStudentListPanel( JFrame frame )
     {
         JPanel listPanel = new JPanel();
@@ -452,7 +446,7 @@ public class AdaptiveLearningSystem
         
         String[] studentList = FileManager.listStudents();
         
-        if( studentList.length == 0 )
+        if ( studentList.length == 0 )
         {
             JPanel noStudentsPanel = new JPanel( new BorderLayout() );
             noStudentsPanel.setBackground( new Color( 70, 130, 180 ) );
@@ -467,7 +461,7 @@ public class AdaptiveLearningSystem
         }
         else
         {
-            for( String studentId : studentList )
+            for ( String studentId : studentList )
             {
                 listPanel.add( createStudentButton( studentId, frame ) );
                 listPanel.add( Box.createVerticalStrut( 5 ) );
@@ -478,6 +472,7 @@ public class AdaptiveLearningSystem
     }
 
 
+    // Create button
     private static JPanel createStudentButton( String studentId, JFrame frame )
     {
         JPanel studentPanel = new JPanel( new FlowLayout( FlowLayout.LEFT ) );
@@ -494,6 +489,7 @@ public class AdaptiveLearningSystem
     }
 
 
+    // Create scrollable
     private static JPanel createScrollablePanel( JPanel content )
     {
         JScrollPane scrollPane = new JScrollPane( content );
@@ -503,17 +499,20 @@ public class AdaptiveLearningSystem
         scrollPane.setPreferredSize( new Dimension( 400, 250 ) );
         
         return new JPanel( new BorderLayout() )
-        {{
-            add( scrollPane, BorderLayout.CENTER );
-            setBackground( Color.WHITE );
-        }};
+        {
+            {
+                add( scrollPane, BorderLayout.CENTER );
+                setBackground( Color.WHITE );
+            }
+        };
     }
 
 
+    // Load student
     private static void loadStudent( String studentId, JFrame frame )
     {
         currentStudent = FileManager.loadStudent( studentId );
-        if( currentStudent != null )
+        if ( currentStudent != null )
         {
             frame.dispose();
             createMainDashboard();
@@ -530,6 +529,7 @@ public class AdaptiveLearningSystem
     }
 
 
+    // Create panel
     private static JPanel createLoadStudentBottomPanel( JFrame frame )
     {
         JPanel panel = new JPanel( new FlowLayout( FlowLayout.CENTER ) );
@@ -548,12 +548,13 @@ public class AdaptiveLearningSystem
     }
 
 
+    // Create dashboard
     public static void createMainDashboard()
     {
         patternMatchingLessons = FileManager.loadPatternLessons();
         wordBuildingLessons = FileManager.loadWordLessons();
 
-        if( mainFrame != null )
+        if ( mainFrame != null )
         {
             mainFrame.dispose();
         }
@@ -572,34 +573,94 @@ public class AdaptiveLearningSystem
     }
 
 
+    // Create panel
     private static JPanel createDashboardTopPanel()
     {
-        JPanel topPanel = new JPanel();
-        topPanel.setLayout( new BoxLayout( topPanel, BoxLayout.Y_AXIS ) );
+        JPanel topPanel = new JPanel( new BorderLayout() );
         topPanel.setBackground( Color.WHITE );
-        topPanel.setBorder( BorderFactory.createEmptyBorder( 20, 0, 20, 0 ) );
+        topPanel.setBorder( BorderFactory.createEmptyBorder( 5, 10, 5, 10 ) );
 
+        // Center panel for title
         JPanel titlePanel = createDialogTitle( "Adaptive Learning System" );
-        titlePanel.setMaximumSize( new Dimension( Integer.MAX_VALUE, 60 ) );
+        topPanel.add( titlePanel, BorderLayout.CENTER );
 
-        topPanel.add( titlePanel );
-        topPanel.add( Box.createVerticalStrut( 20 ) );
+        // Logout button panel (top-right)
+        JPanel logoutPanel = createLogoutPanel();
+        topPanel.add( logoutPanel, BorderLayout.EAST );
 
-        if( currentStudent != null )
+        // Welcome panel below
+        if ( currentStudent != null )
         {
             updateStudentLevel();
-            
             FileManager.saveStudent( currentStudent );
             
             JPanel welcomePanel = createWelcomePanel();
-            topPanel.add( welcomePanel );
-            topPanel.add( Box.createVerticalStrut( 20 ) );
+            JPanel southPanel = new JPanel( new BorderLayout() );
+            southPanel.setBackground( Color.WHITE );
+            southPanel.add( welcomePanel, BorderLayout.CENTER );
+            topPanel.add( southPanel, BorderLayout.SOUTH );
         }
 
         return topPanel;
     }
 
 
+    // Create panel
+    private static JPanel createLogoutPanel()
+    {
+        JPanel panel = new JPanel( new FlowLayout( FlowLayout.RIGHT ) );
+        panel.setBackground( new Color( 70, 130, 180 ) ); // Set to blue to match title
+        panel.setBorder( BorderFactory.createEmptyBorder( 5, 10, 5, 10 ) );
+
+        JButton logoutButton = new JButton( "Log Out" );
+        logoutButton.setFont( new Font( "Arial", Font.BOLD, 12 ) );
+        logoutButton.setBackground( Color.RED );
+        logoutButton.setForeground( Color.WHITE );
+        logoutButton.setFocusPainted( false );
+        logoutButton.setBorder( null );
+        logoutButton.setMargin( new Insets( 0, 0, 0, 0 ) );
+        logoutButton.setPreferredSize( new Dimension( 80, 30 ) );
+        logoutButton.addActionListener( e -> logout() );
+
+        logoutButton.addMouseListener( new java.awt.event.MouseAdapter()
+        {
+            public void mouseEntered( java.awt.event.MouseEvent mouseEvent )
+            {
+                logoutButton.setBackground( new Color( 200, 0, 0 ) );
+            }
+
+            public void mouseExited( java.awt.event.MouseEvent mouseEvent )
+            {
+                logoutButton.setBackground( Color.RED );
+            }
+        } );
+
+        panel.add( logoutButton );
+        return panel;
+    }
+
+
+    // Logout user
+    private static void logout()
+    {
+        int option = JOptionPane.showConfirmDialog(
+            mainFrame,
+            "Are you sure you want to log out?",
+            "Confirm Logout",
+            JOptionPane.YES_NO_OPTION,
+            JOptionPane.QUESTION_MESSAGE
+        );
+
+        if ( option == JOptionPane.YES_OPTION )
+        {
+            currentStudent = null;
+            mainFrame.dispose();
+            showStudentRegistration();
+        }
+    }
+
+
+    // Create panel
     private static JPanel createWelcomePanel()
     {
         JPanel panel = new JPanel( new BorderLayout() );
@@ -612,7 +673,7 @@ public class AdaptiveLearningSystem
         
         String welcomeText = "Welcome, " + currentStudent.getName() + "! (Level: " + 
                            currentLevel + ", Average Score: " + 
-                           String.format("%.0f", averageScore) + "%)";
+                           String.format( "%.0f", averageScore ) + "%)";
         
         JLabel label = new JLabel( welcomeText, SwingConstants.CENTER );
         label.setFont( new Font( "Arial", Font.ITALIC, 18 ) );
@@ -623,6 +684,7 @@ public class AdaptiveLearningSystem
     }
 
 
+    // Create panel
     private static JPanel createDashboardButtonPanel()
     {
         JPanel panel = new JPanel( new GridLayout( 2, 2, 30, 30 ) );
@@ -650,6 +712,7 @@ public class AdaptiveLearningSystem
     }
 
 
+    // Create button
     private static JButton createDashboardButton( String text, Color color )
     {
         JButton button = new JButton( text );
@@ -680,11 +743,12 @@ public class AdaptiveLearningSystem
     }
 
 
+    // Start lesson
     private static void startPatternMatchingLesson()
     {
         selectPatternMatchingLesson();
         
-        if( currentPatternLesson == null )
+        if ( currentPatternLesson == null )
         {
             JOptionPane.showMessageDialog( mainFrame, "Error loading lesson." );
             return;
@@ -694,9 +758,10 @@ public class AdaptiveLearningSystem
     }
 
 
+    // Select lesson
     private static void selectPatternMatchingLesson()
     {
-        if( patternMatchingLessons == null || patternMatchingLessons.isEmpty() )
+        if ( patternMatchingLessons == null || patternMatchingLessons.isEmpty() )
         {
             currentPatternLesson = null;
             return;
@@ -704,15 +769,15 @@ public class AdaptiveLearningSystem
 
         int userLevel = currentStudent.getCurrentLevel();
         
-        if( userLevel == 1 && patternMatchingLessons.size() > 0 )
+        if ( userLevel == 1 && patternMatchingLessons.size() > 0 )
         {
             currentPatternLesson = patternMatchingLessons.get( 0 );
         }
-        else if( userLevel == 2 && patternMatchingLessons.size() > 1 )
+        else if ( userLevel == 2 && patternMatchingLessons.size() > 1 )
         {
             currentPatternLesson = patternMatchingLessons.get( 1 );
         }
-        else if( userLevel == 3 && patternMatchingLessons.size() > 2 )
+        else if ( userLevel == 3 && patternMatchingLessons.size() > 2 )
         {
             currentPatternLesson = patternMatchingLessons.get( 2 );
         }
@@ -723,15 +788,21 @@ public class AdaptiveLearningSystem
     }
 
 
+    // Create window
     private static void createPatternMatchingWindow()
     {
         Color blueColor = new Color( 70, 130, 180 );
-        JDialog dialog = createLessonDialog( mainFrame, "Pattern Matching", 600, 500, blueColor );
+        
+        // Adjust window size based on number of patterns
+        int numShapes = currentPatternLesson.getPattern().length;
+        int windowWidth = ( numShapes > 4 ) ? 700 : 600; // Wider for 5 shapes
+        
+        JDialog dialog = createLessonDialog( mainFrame, "Pattern Matching", windowWidth, 500, blueColor );
         
         JPanel mainPanel = createLessonMainPanel();
         JPanel instructionPanel = createLessonInstructionPanel( "Memorize this pattern:", blueColor );
-        JPanel patternPanel = createPatternPanel();
-        JPanel buttonPanel = createPatternMatchingReadyPanel( dialog, blueColor );
+        JPanel patternPanel = createShapePatternPanel();
+        JPanel buttonPanel = createPatternMatchingReadyPanel( dialog, Color.GRAY );
 
         mainPanel.add( instructionPanel );
         mainPanel.add( Box.createVerticalStrut( 30 ) );
@@ -744,6 +815,7 @@ public class AdaptiveLearningSystem
     }
 
 
+    // Create dialog
     private static JDialog createLessonDialog( JFrame parent, String title, int width, int height, Color color )
     {
         JDialog dialog = new JDialog( parent, title, true );
@@ -755,6 +827,7 @@ public class AdaptiveLearningSystem
     }
 
 
+    // Create panel
     private static JPanel createLessonMainPanel()
     {
         JPanel panel = new JPanel();
@@ -765,6 +838,7 @@ public class AdaptiveLearningSystem
     }
 
 
+    // Create panel
     private static JPanel createLessonInstructionPanel( String text, Color color )
     {
         JPanel panel = new JPanel( new BorderLayout() );
@@ -781,51 +855,168 @@ public class AdaptiveLearningSystem
     }
 
 
-    private static JPanel createPatternPanel()
+    // Create panel
+    private static JPanel createShapePatternPanel()
     {
         JPanel panel = new JPanel();
-        panel.setLayout( new FlowLayout( FlowLayout.CENTER, 20, 20 ) );
+        panel.setLayout( new BoxLayout( panel, BoxLayout.Y_AXIS ) );
         panel.setBackground( Color.WHITE );
         panel.setAlignmentX( Component.CENTER_ALIGNMENT );
-        panel.setMaximumSize( new Dimension( 550, 200 ) );
+        panel.setMaximumSize( new Dimension( Integer.MAX_VALUE, 250 ) ); // Increased height
 
-        for( String shape : currentPatternLesson.getPattern() )
+        // Create a horizontal panel for shapes
+        JPanel shapesPanel = new JPanel();
+        shapesPanel.setLayout( new FlowLayout( FlowLayout.CENTER, 20, 10 ) );
+        shapesPanel.setBackground( Color.WHITE );
+        shapesPanel.setAlignmentX( Component.CENTER_ALIGNMENT );
+        
+        // Calculate width based on number of patterns
+        int numShapes = currentPatternLesson.getPattern().length;
+        int panelWidth = numShapes * 120 + ( numShapes - 1 ) * 20; // 120 width per shape, 20 spacing
+        shapesPanel.setPreferredSize( new Dimension( Math.min( panelWidth, 600 ), 150 ) );
+        shapesPanel.setMaximumSize( new Dimension( Math.min( panelWidth, 600 ), 150 ) );
+
+        for ( String shape : currentPatternLesson.getPattern() )
         {
-            panel.add( createShapeLabel( shape, new Color( 70, 130, 180 ) ) );
+            shapesPanel.add( createShapeWithLabel( shape, new Color( 70, 130, 180 ) ) );
         }
 
+        panel.add( shapesPanel );
         return panel;
     }
 
 
-    private static JLabel createShapeLabel( String shape, Color color )
+    // Create shape
+    private static JPanel createShapeWithLabel( String shape, Color color )
     {
-        JLabel label = new JLabel( shape, SwingConstants.CENTER );
-        label.setFont( new Font( "Arial", Font.BOLD, 16 ) );
+        JPanel container = new JPanel();
+        container.setLayout( new BoxLayout( container, BoxLayout.Y_AXIS ) );
+        container.setBackground( Color.WHITE );
+        container.setAlignmentX( Component.CENTER_ALIGNMENT );
+        container.setAlignmentY( Component.CENTER_ALIGNMENT );
         
-        int patternLength = currentPatternLesson.getPattern().length;
-        int shapeSize = patternLength > 4 ? 80 : 100;
+        // Calculate shape size based on number of patterns
+        int numShapes = currentPatternLesson.getPattern().length;
+        int shapeSize = ( numShapes > 4 ) ? 80 : 100;
         
-        label.setPreferredSize( new Dimension( shapeSize, 70 ) );
-        label.setBorder( BorderFactory.createCompoundBorder(
-            BorderFactory.createLineBorder( Color.BLACK, 1 ),
-            BorderFactory.createEmptyBorder( 8, 8, 8, 8 )
-        ) );
-        label.setOpaque( true );
-        label.setBackground( color );
-        label.setForeground( Color.WHITE );
-
-        return label;
+        // Shape drawing (without text)
+        JPanel shapePanel = createShapeDrawing( shape, color );
+        shapePanel.setPreferredSize( new Dimension( shapeSize, shapeSize ) );
+        shapePanel.setMinimumSize( new Dimension( shapeSize, shapeSize ) );
+        shapePanel.setMaximumSize( new Dimension( shapeSize, shapeSize ) );
+        
+        // Center the shape panel
+        JPanel shapeWrapper = new JPanel( new FlowLayout( FlowLayout.CENTER, 0, 0 ) );
+        shapeWrapper.setBackground( Color.WHITE );
+        shapeWrapper.add( shapePanel );
+        
+        container.add( shapeWrapper );
+        
+        // Add space between shape and label
+        container.add( Box.createVerticalStrut( 5 ) );
+        
+        // Create label box for shape name (OUTSIDE the shape box)
+        JLabel nameLabel = new JLabel( shape.substring( 0, 1 ).toUpperCase() + shape.substring( 1 ), SwingConstants.CENTER );
+        nameLabel.setFont( new Font( "Arial", Font.BOLD, 12 ) );
+        nameLabel.setForeground( Color.BLACK );
+        nameLabel.setOpaque( true );
+        nameLabel.setBackground( Color.LIGHT_GRAY );
+        nameLabel.setBorder( BorderFactory.createLineBorder( Color.BLACK, 1 ) );
+        nameLabel.setPreferredSize( new Dimension( shapeSize, 25 ) );
+        nameLabel.setMinimumSize( new Dimension( shapeSize, 25 ) );
+        nameLabel.setMaximumSize( new Dimension( shapeSize, 25 ) );
+        
+        // Center the label
+        JPanel labelWrapper = new JPanel( new FlowLayout( FlowLayout.CENTER, 0, 0 ) );
+        labelWrapper.setBackground( Color.WHITE );
+        labelWrapper.add( nameLabel );
+        
+        container.add( labelWrapper );
+        return container;
     }
 
 
+    // Draw shape
+    private static JPanel createShapeDrawing( String shape, Color color )
+    {
+        JPanel shapePanel = new JPanel()
+        {
+            @Override
+            protected void paintComponent( Graphics g )
+            {
+                super.paintComponent( g );
+                Graphics2D g2d = ( Graphics2D ) g;
+                g2d.setRenderingHint( RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON );
+                
+                int width = getWidth();
+                int height = getHeight();
+                int padding = 10;
+                int drawWidth = width - 2 * padding;
+                int drawHeight = height - 2 * padding;
+                
+                // Draw the shape ONLY (no text)
+                g2d.setColor( color );
+                
+                switch ( shape.toLowerCase() )
+                {
+                    case "circle":
+                        g2d.fillOval( padding, padding, drawWidth, drawHeight );
+                        break;
+                    case "square":
+                        g2d.fillRect( padding, padding, drawWidth, drawHeight );
+                        break;
+                    case "triangle":
+                        int[] xPoints = { width / 2, padding, width - padding };
+                        int[] yPoints = { padding, height - padding, height - padding };
+                        g2d.fillPolygon( xPoints, yPoints, 3 );
+                        break;
+                    case "star":
+                        // Draw a simple 5-pointed star
+                        int centerX = width / 2;
+                        int centerY = height / 2;
+                        int outerRadius = Math.min( drawWidth, drawHeight ) / 2;
+                        int innerRadius = outerRadius / 2;
+                        
+                        int[] xPointsStar = new int[10];
+                        int[] yPointsStar = new int[10];
+                        
+                        for ( int i = 0; i < 5; i++ )
+                        {
+                            double angle = Math.PI / 2 + i * 2 * Math.PI / 5;
+                            xPointsStar[2 * i] = ( int ) ( centerX + outerRadius * Math.cos( angle ) );
+                            yPointsStar[2 * i] = ( int ) ( centerY - outerRadius * Math.sin( angle ) );
+                            
+                            angle += Math.PI / 5;
+                            xPointsStar[2 * i + 1] = ( int ) ( centerX + innerRadius * Math.cos( angle ) );
+                            yPointsStar[2 * i + 1] = ( int ) ( centerY - innerRadius * Math.sin( angle ) );
+                        }
+                        
+                        g2d.fillPolygon( xPointsStar, yPointsStar, 10 );
+                        break;
+                    default:
+                        // Fallback to text if shape not recognized
+                        g2d.setColor( Color.BLACK );
+                        g2d.drawString( shape, width / 2 - 10, height / 2 );
+                }
+            }
+        };
+        
+        shapePanel.setBackground( Color.WHITE );
+        shapePanel.setBorder( BorderFactory.createLineBorder( Color.BLACK, 1 ) );
+        
+        return shapePanel;
+    }
+
+
+    // Create panel
     private static JPanel createPatternMatchingReadyPanel( JDialog dialog, Color color )
     {
         JPanel panel = new JPanel( new BorderLayout() );
+        Color greenColor = new Color( 60, 179, 113 );
         panel.setBackground( Color.WHITE );
         panel.setBorder( BorderFactory.createEmptyBorder( 50, 20, 30, 20 ) );
 
-        JButton readyButton = createStyledButton( "I'm Ready!", color, 16 );
+        JButton readyButton = createStyledButton( "I'm Ready!", greenColor , 16 );
         readyButton.setPreferredSize( new Dimension( 0, 40 ) );
 
         readyButton.addActionListener( e -> {
@@ -838,6 +1029,7 @@ public class AdaptiveLearningSystem
     }
 
 
+    // Show test
     private static void showPatternMatchingTest()
     {
         Color blueColor = new Color( 70, 130, 180 );
@@ -858,6 +1050,7 @@ public class AdaptiveLearningSystem
     }
 
 
+    // Create panel
     private static JPanel createPatternMatchingTestButtonPanel( JDialog dialog, JTextField field, Color color )
     {
         JPanel panel = new JPanel( new FlowLayout( FlowLayout.CENTER, 20, 0 ) );
@@ -888,6 +1081,7 @@ public class AdaptiveLearningSystem
     }
 
 
+    // Show hint
     private static void showPatternMatchingHint()
     {
         String hint = currentPatternLesson.getHint();
@@ -900,6 +1094,7 @@ public class AdaptiveLearningSystem
     }
 
 
+    // Create dialog
     private static JDialog createTestDialog( JFrame parent, String title, int width, int height, Color color )
     {
         JDialog dialog = new JDialog( parent, title, true );
@@ -910,6 +1105,7 @@ public class AdaptiveLearningSystem
     }
 
 
+    // Create panel
     private static JPanel createTestMainPanel()
     {
         JPanel panel = new JPanel();
@@ -920,6 +1116,7 @@ public class AdaptiveLearningSystem
     }
 
 
+    // Create panel
     private static JPanel createTestInstructionPanel( String text, Color color )
     {
         JPanel panel = new JPanel( new BorderLayout() );
@@ -936,6 +1133,7 @@ public class AdaptiveLearningSystem
     }
 
 
+    // Create field
     private static JTextField createAnswerField( Color color )
     {
         JTextField field = new JTextField();
@@ -949,6 +1147,7 @@ public class AdaptiveLearningSystem
     }
 
 
+    // Create panel
     private static JPanel createTestInputPanel( JPanel instructionPanel, JTextField answerField )
     {
         JPanel panel = new JPanel();
@@ -964,9 +1163,10 @@ public class AdaptiveLearningSystem
     }
 
 
+    // Submit answer
     private static void submitTestAnswer( JDialog dialog, String answer, Color color )
     {
-        if( answer.isEmpty() )
+        if ( answer.isEmpty() )
         {
             showWarningMessage( dialog, "Please enter an answer." );
             return;
@@ -974,7 +1174,7 @@ public class AdaptiveLearningSystem
 
         dialog.dispose();
         
-        if( color.equals( new Color( 70, 130, 180 ) ) )
+        if ( color.equals( new Color( 70, 130, 180 ) ) )
         {
             processPatternMatchingAnswer( answer );
         }
@@ -985,6 +1185,7 @@ public class AdaptiveLearningSystem
     }
 
 
+    // Show warning
     private static void showWarningMessage( Component parent, String message )
     {
         JOptionPane.showMessageDialog(
@@ -996,6 +1197,7 @@ public class AdaptiveLearningSystem
     }
 
 
+    // Process answer
     private static void processPatternMatchingAnswer( String userAnswer )
     {
         int score = currentPatternLesson.evaluateAnswer( userAnswer );
@@ -1006,6 +1208,7 @@ public class AdaptiveLearningSystem
     }
 
 
+    // Generate feedback
     private static String generatePatternMatchingFeedback( String userAnswer )
     {
         String[] pattern = currentPatternLesson.getPattern();
@@ -1017,9 +1220,9 @@ public class AdaptiveLearningSystem
         StringBuilder feedback = new StringBuilder();
         feedback.append( "Pattern Matching Results:\n\n" );
         
-        for( int i = 0; i < totalShapes; i++ )
+        for ( int i = 0; i < totalShapes; i++ )
         {
-            if( i < userShapes.length && userShapes[i].equalsIgnoreCase( pattern[i] ) )
+            if ( i < userShapes.length && userShapes[i].equalsIgnoreCase( pattern[i] ) )
             {
                 correctCount++;
                 feedback.append( "✓ " ).append( pattern[i] ).append( " - Correct!\n" );
@@ -1038,11 +1241,11 @@ public class AdaptiveLearningSystem
         feedback.append( "Correct: " ).append( correctCount ).append( "/" ).append( totalShapes ).append( "\n" );
         feedback.append( "This lesson score: " ).append( String.format( "%.0f", scorePercentage ) ).append( "%\n" );
         
-        if( scorePercentage == 100 )
+        if ( scorePercentage == 100 )
         {
             feedback.append( "\nPerfect score! Well done!" );
         }
-        else if( scorePercentage >= 60 )
+        else if ( scorePercentage >= 60 )
         {
             feedback.append( "\nGood work! You're progressing well!" );
         }
@@ -1055,6 +1258,7 @@ public class AdaptiveLearningSystem
     }
 
 
+    // Show results
     private static void showResultMessage( String message, String title )
     {
         JOptionPane.showMessageDialog(
@@ -1066,9 +1270,10 @@ public class AdaptiveLearningSystem
     }
 
 
+    // Update progress
     private static void updateStudentProgress( int score )
     {
-        if( currentStudent != null )
+        if ( currentStudent != null )
         {
             currentStudent.updateProgress( score );
             
@@ -1081,9 +1286,10 @@ public class AdaptiveLearningSystem
     }
 
 
+    // Start lesson
     private static void startWordBuildingLesson()
     {
-        if( wordBuildingLessons == null || wordBuildingLessons.isEmpty() )
+        if ( wordBuildingLessons == null || wordBuildingLessons.isEmpty() )
         {
             showWarningMessage( mainFrame, "No word building lessons available." );
             return;
@@ -1091,19 +1297,20 @@ public class AdaptiveLearningSystem
         
         selectWordBuildingLesson();
         
-        if( currentWordLesson == null )
+        if ( currentWordLesson == null )
         {
             showWarningMessage( mainFrame, "Error loading lesson." );
             return;
         }
         
-        showWordBuildingTest(); // Go directly to test - no memorization needed
+        showWordBuildingTest();
     }
 
 
+    // Select lesson
     private static void selectWordBuildingLesson()
     {
-        if( wordBuildingLessons == null || wordBuildingLessons.isEmpty() )
+        if ( wordBuildingLessons == null || wordBuildingLessons.isEmpty() )
         {
             currentWordLesson = null;
             return;
@@ -1113,15 +1320,15 @@ public class AdaptiveLearningSystem
         
         List<WordBuildingLesson> levelLessons = new ArrayList<>();
         
-        for( WordBuildingLesson lesson : wordBuildingLessons )
+        for ( WordBuildingLesson lesson : wordBuildingLessons )
         {
-            if( lesson.getDifficultyLevel() == userLevel )
+            if ( lesson.getDifficultyLevel() == userLevel )
             {
                 levelLessons.add( lesson );
             }
         }
         
-        if( levelLessons.isEmpty() )
+        if ( levelLessons.isEmpty() )
         {
             currentWordLesson = wordBuildingLessons.get( 0 );
         }
@@ -1134,6 +1341,7 @@ public class AdaptiveLearningSystem
     }
 
 
+    // Show test
     private static void showWordBuildingTest()
     {
         Color greenColor = new Color( 60, 179, 113 );
@@ -1163,6 +1371,7 @@ public class AdaptiveLearningSystem
     }
 
 
+    // Create panel
     private static JPanel createWordBuildingTestMainPanel()
     {
         JPanel panel = new JPanel();
@@ -1173,6 +1382,7 @@ public class AdaptiveLearningSystem
     }
 
 
+    // Create panel
     private static JPanel createWordBuildingLettersPanel( Color color )
     {
         JPanel panel = new JPanel();
@@ -1183,7 +1393,7 @@ public class AdaptiveLearningSystem
         String[] scrambledLetters = currentWordLesson.getScrambledLetters();
         int wordLength = currentWordLesson.getTargetWord().length();
         
-        if( wordLength > 6 )
+        if ( wordLength > 6 )
         {
             panel.setMaximumSize( new Dimension( 550, 100 ) );
         }
@@ -1192,7 +1402,7 @@ public class AdaptiveLearningSystem
             panel.setMaximumSize( new Dimension( 550, 150 ) );
         }
 
-        for( String letter : scrambledLetters )
+        for ( String letter : scrambledLetters )
         {
             panel.add( createWordBuildingLetterLabel( letter, color, wordLength ) );
         }
@@ -1201,6 +1411,7 @@ public class AdaptiveLearningSystem
     }
 
 
+    // Create label
     private static JLabel createWordBuildingLetterLabel( String letter, Color color, int wordLength )
     {
         String displayLetter = letter.toUpperCase();
@@ -1209,11 +1420,11 @@ public class AdaptiveLearningSystem
         label.setFont( new Font( "Arial", Font.BOLD, 24 ) );
         
         int size;
-        if( wordLength > 8 )
+        if ( wordLength > 8 )
         {
             size = 45;
         }
-        else if( wordLength > 6 )
+        else if ( wordLength > 6 )
         {
             size = 55;
         }
@@ -1238,6 +1449,7 @@ public class AdaptiveLearningSystem
     }
 
 
+    // Create panel
     private static JPanel createWordBuildingTestButtonPanel( JDialog dialog, JTextField field, Color color )
     {
         JPanel panel = new JPanel( new FlowLayout( FlowLayout.CENTER, 20, 0 ) );
@@ -1268,6 +1480,7 @@ public class AdaptiveLearningSystem
     }
 
 
+    // Show hint
     private static void showWordBuildingHint()
     {
         String hint = currentWordLesson.getHint();
@@ -1280,6 +1493,7 @@ public class AdaptiveLearningSystem
     }
 
 
+    // Process answer
     private static void processWordBuildingAnswer( String userAnswer )
     {
         int score = currentWordLesson.evaluateAnswer( userAnswer );
@@ -1290,12 +1504,13 @@ public class AdaptiveLearningSystem
     }
 
 
+    // Generate feedback
     private static String generateWordBuildingFeedback( String userAnswer )
     {
         StringBuilder feedback = new StringBuilder();
         feedback.append( "Word Building Results:\n\n" );
         
-        if( currentWordLesson.evaluateAnswer( userAnswer ) == 100 )
+        if ( currentWordLesson.evaluateAnswer( userAnswer ) == 100 )
         {
             feedback.append( "✓ Correct! Well done!\n" );
             feedback.append( "The word was: " ).append( currentWordLesson.getTargetWord() );
@@ -1313,9 +1528,10 @@ public class AdaptiveLearningSystem
     }
 
 
+    // Show progress
     private static void showProgressWindow()
     {
-        if( currentStudent == null )
+        if ( currentStudent == null )
         {
             showWarningMessage( mainFrame, "No student profile loaded." );
             return;
@@ -1337,6 +1553,7 @@ public class AdaptiveLearningSystem
     }
 
 
+    // Create content
     private static JPanel createProgressContentPanel()
     {
         JPanel panel = new JPanel( new GridBagLayout() );
@@ -1361,12 +1578,13 @@ public class AdaptiveLearningSystem
     }
 
 
+    // Calculate perfect
     private static int calculatePerfectScores()
     {
         int perfectScores = 0;
-        for( int score : currentStudent.getProgressScores() )
+        for ( int score : currentStudent.getProgressScores() )
         {
-            if( score == 100 )
+            if ( score == 100 )
             {
                 perfectScores++;
             }
@@ -1375,6 +1593,7 @@ public class AdaptiveLearningSystem
     }
 
 
+    // Add field
     private static void addProgressField( JPanel panel, GridBagConstraints gbc, String label, String value, int row )
     {
         gbc.gridx = 0;
@@ -1397,6 +1616,7 @@ public class AdaptiveLearningSystem
     }
 
 
+    // Create panel
     private static JPanel createProgressButtonPanel( JDialog dialog )
     {
         JPanel panel = new JPanel( new FlowLayout( FlowLayout.CENTER ) );
@@ -1413,9 +1633,10 @@ public class AdaptiveLearningSystem
     }
 
 
+    // Export report
     private static void exportReport()
     {
-        if( currentStudent != null )
+        if ( currentStudent != null )
         {
             FileManager.exportReport( currentStudent );
             showResultMessage( "Report exported to reports/ directory!", "Export Successful" );
@@ -1427,18 +1648,19 @@ public class AdaptiveLearningSystem
     }
 
 
+    // Update level
     private static void updateStudentLevel()
     {
-        if( currentStudent != null )
+        if ( currentStudent != null )
         {
             double averageScore = currentStudent.getAverageScore();
             int level;
             
-            if( averageScore >= 90 )
+            if ( averageScore >= 90 )
             {
                 level = 3;
             }
-            else if( averageScore >= 60 )
+            else if ( averageScore >= 60 )
             {
                 level = 2;
             }
@@ -1453,6 +1675,7 @@ public class AdaptiveLearningSystem
     }
 
 
+    // Parse answer
     private static String[] parseUserAnswer( String userAnswer, String[] expectedPattern )
     {
         String cleanAnswer = userAnswer.replaceAll( "[,\\s]+", "" ).toLowerCase();
@@ -1460,14 +1683,14 @@ public class AdaptiveLearningSystem
         ArrayList<String> userShapes = new ArrayList<>();
         
         int position = 0;
-        while( position < cleanAnswer.length() )
+        while ( position < cleanAnswer.length() )
         {
             boolean foundMatch = false;
             
-            for( String expectedShape : expectedPattern )
+            for ( String expectedShape : expectedPattern )
             {
                 String lowerShape = expectedShape.toLowerCase();
-                if( cleanAnswer.startsWith( lowerShape, position ) )
+                if ( cleanAnswer.startsWith( lowerShape, position ) )
                 {
                     userShapes.add( expectedShape );
                     position += lowerShape.length();
@@ -1476,26 +1699,26 @@ public class AdaptiveLearningSystem
                 }
             }
             
-            if( !foundMatch )
+            if ( !foundMatch )
             {
                 String remaining = cleanAnswer.substring( position );
                 
-                if( remaining.startsWith( "circle" ) )
+                if ( remaining.startsWith( "circle" ) )
                 {
                     userShapes.add( "Circle" );
                     position += 6;
                 }
-                else if( remaining.startsWith( "square" ) )
+                else if ( remaining.startsWith( "square" ) )
                 {
                     userShapes.add( "Square" );
                     position += 6;
                 }
-                else if( remaining.startsWith( "triangle" ) )
+                else if ( remaining.startsWith( "triangle" ) )
                 {
                     userShapes.add( "Triangle" );
                     position += 8;
                 }
-                else if( remaining.startsWith( "star" ) )
+                else if ( remaining.startsWith( "star" ) )
                 {
                     userShapes.add( "Star" );
                     position += 4;

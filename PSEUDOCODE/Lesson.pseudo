@@ -11,29 +11,6 @@ CLASS Fields:
     abstract displayLesson()
 
 
-METHOD: evaluateAnswer (ABSTRACT)
-IMPORT: userAnswer (String)
-EXPORT: score (Integer)
-ASSERTION: Evaluate the user's answer and return a score.
-
-
-METHOD:  displayLesson (ABSTRACT)
-IMPORT: none
-EXPORT: none
-ASSERTION: Display lesson content to the user.
-
-ALGORITHM:
-  
-METHOD:  getHint (ABSTRACT)
-IMPORT: none
-EXPORT: hint (String)
-ASSERTION: Provide a hint to help the user answer the lesson.
-
-ALGORITHM:  
-  RETURN hint 
-END METHOD
-
-END METHOD
 
 
 METHOD: markCompleted()
@@ -42,7 +19,7 @@ EXPORT: completionstatus(boolean)
 ASSERTION: Update lesson completion status based on score.
 
 ALGORITHM:
- IF score >= 60 THEN
+ IF score >= 0 THEN
         SET completionStatus = true
     ENDIF
 

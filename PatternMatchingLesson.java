@@ -35,6 +35,7 @@ public class PatternMatchingLesson extends Lesson
         return 0;
     }
 
+    
     // Helper
     private String[] parseUserAnswer( String userAnswer, String[] expectedPattern )
     {

@@ -59,7 +59,7 @@ public class Student
         {
             currentLevel = 2;
         }
-        else if( currentLevel == 2 && averageScore >= 70.0 )
+        else if( currentLevel == 2 && averageScore >= 80.0 )
         {
             currentLevel = 3;
         }
