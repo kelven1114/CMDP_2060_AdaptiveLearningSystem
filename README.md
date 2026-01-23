@@ -10,10 +10,11 @@ Setup Instructions:
 -open vs code and locate the folder
 -open vs code terminal
 -git init
--git clone <repository-url>
+-git clone https://github.com/kelven1114/CMDP_2060_AdaptiveLearningSystem.git
+-locate the AdaptiveLearningSystem.java
+-run the code
 
 2. Lesson files:
--run the program
 -create your student profile
 -exit the program
 -move the pattern_lesson.txt and word_lesson.txt into the lessons/ directory created
@@ -29,6 +30,8 @@ AdaptiveLearningSystem/
 │   └── AdaptiveLearningSystem.java
 └── README.md
 
-4. Compile and run application in terminal:
--javac AdaptiveLearningSystem.java
--java AdaptiveLearningSystem
+
+How to Use:
+
+1. locate the AdaptiveLearningSystem.java
+-run the code
