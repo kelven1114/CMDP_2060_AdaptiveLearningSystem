@@ -1,24 +1,31 @@
 Adaptive Learning System
-
-Overview:
+Overview
 An interactive Java Swing application designed to provide help for students with learning disabilities, autism or dyslexia learn through interactive, customizable lessons. This app will track student's progress, adapt to individual learning speeds, through interactive visual learning modules.
 
-Setup Instructions:
+Setup Instructions
+1. Clone the Repository
+Make a new folder
 
-1. Clone the repository:
--make a new folder
--open vs code and locate the folder
--open vs code terminal
--git init
--git clone <repository-url>
+Open VS Code and locate the folder
 
-2. Lesson files:
--run the program
--create your student profile
--exit the program
--move the pattern_lesson.txt and word_lesson.txt into the lessons/ directory created
+Open VS Code terminal
 
-3. Directory Structure:
+Run these commands:
+
+bash
+git init
+git clone <repository-url>
+2. Lesson Files Setup
+Run the program
+
+Create your student profile
+
+Exit the program
+
+Move the pattern_lesson.txt and word_lesson.txt files into the lessons/ directory created by the program
+
+3. Directory Structure
+text
 AdaptiveLearningSystem/
 ├── lessons/
 │   ├── pattern_lesson.txt
@@ -28,7 +35,15 @@ AdaptiveLearningSystem/
 ├── src/
 │   └── AdaptiveLearningSystem.java
 └── README.md
+4. Compile and Run Application
+In terminal, navigate to the project directory and run:
 
-4. Compile and run application in terminal:
--javac AdaptiveLearningSystem.java
--java AdaptiveLearningSystem
+bash
+javac AdaptiveLearningSystem.java
+java AdaptiveLearningSystem
+Important Notes
+The program will automatically create students/ and reports/ directories
+
+You must manually move the lesson files to the lessons/ directory after the first run
+
+All student data and reports will be saved locally in their respective directories
